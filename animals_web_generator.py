@@ -40,13 +40,16 @@ def create_str_for_html(data):
         fox_type = animal_data['characteristics'].get('type')
         location = animal_data['locations'][0]
 
-        output += f"Name: {animal_data['name']}\n"
+        output += '<li class="cards__item">'
+        output += f"Name: {animal_data['name']}<br>\n"
         if diet:
-            output += f"Diet: {animal_data['characteristics']['diet']}\n"
+            output += f"Diet: {animal_data['characteristics']['diet']}<br>\n"
         if location:
-            output += f"Location: {animal_data['locations'][0]}\n"
+            output += f"Location: {animal_data['locations'][0]}<br>\n"
         if fox_type:
-            output += f"Type: {animal_data['characteristics']['type']}\n"
+            output += f"Type: {animal_data['characteristics']['type']}<br>\n"
+        output += '</li>'
+
     return output
 
 
