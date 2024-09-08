@@ -13,44 +13,32 @@ def read_animal_html(html_file_path):
         return fileobject.read()
 
 
-"""
-def display_animal_data(animals_data):
-    "" displays the animals, the diet, the habitat and the type ""
-    for foxes in animals_data:
-        fox = foxes.get('name', None).upper()
-        diet = foxes['characteristics'].get('diet')
-        fox_type = foxes['characteristics'].get('type')
-        location = foxes['locations'][0]
-
-        print(f"{fox}")
-        if diet:
-            print(f"  Diet: {diet}")
-        if location:
-            print(f"  Location: {location}")
-        if fox_type:
-            print(f"  Type: {fox_type}")
-"""
-
-
 def create_str_for_html(data):
     """ creates the new text for the html-file """
     output = ''
     for animal_data in data:
-        diet = animal_data['characteristics'].get('diet')
-        fox_type = animal_data['characteristics'].get('type')
-        location = animal_data['locations'][0]
+        output += serialize_animal(animal_data)
+    return output
 
-        output += "<li class='cards__item'>"
-        output += f"<div class='card__title'> {animal_data['name']}</div>\n"
-        output += "<p class='card__text'>"
-        if diet:
-            output += f"<div><strong>Diet:</strong> {animal_data['characteristics']['diet']}</div>\n"
-        if location:
-            output += f"<div><strong>Location:</strong> {animal_data['locations'][0]}</div>\n"
-        if fox_type:
-            output += f"<div><strong>Type:</strong> {animal_data['characteristics']['type']}</div>\n"
-        output += '</p>'
-        output += '</li>'
+
+def serialize_animal(animal_data):
+    """ serialize the animal data for usage in html """
+    output = ''
+    diet = animal_data['characteristics'].get('diet')
+    fox_type = animal_data['characteristics'].get('type')
+    location = animal_data['locations'][0]
+
+    output += "<li class='cards__item'>"
+    output += f"<div class='card__title'> {animal_data['name']}</div>\n"
+    output += "<p class='card__text'>"
+    if diet:
+        output += f"<div><strong>Diet:</strong> {animal_data['characteristics']['diet']}</div>\n"
+    if location:
+        output += f"<div><strong>Location:</strong> {animal_data['locations'][0]}</div>\n"
+    if fox_type:
+        output += f"<div><strong>Type:</strong> {animal_data['characteristics']['type']}</div>\n"
+    output += '</p>'
+    output += '</li>'
 
     return output
 
@@ -70,7 +58,6 @@ def dump_data_to_html(new_html_content):
 def main():
     """ the functions are called here """
     animals_data = load_data('animals_data.json')
-    #display_animal_data(animals_data)
     html_content = read_animal_html('animals_template.html')
     output = create_str_for_html(animals_data)
     new_html_content = replace_string_html(html_content, output)
