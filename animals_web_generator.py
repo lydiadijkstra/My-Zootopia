@@ -1,10 +1,23 @@
 import json
+import requests
 
 
-def load_data(file_path):
-  """ Loads a JSON file """
-  with open(file_path, "r", encoding="utf-8") as handle:
-    return json.load(handle)
+REQUEST_URL = 'https://api.api-ninjas.com/v1/animals?name={animal_name}'
+KEY = 'Cg1Tw9jXYOCcDG2gBeHm5w==3EUfQgz75QoslqDO'
+
+
+# def load_data(file_path):
+#     """ Loads a JSON file """
+#     with open(file_path, "r", encoding="utf-8") as handle:
+#         return json.load(handle)
+
+
+def load_data(animal_name):
+    response = requests.get(REQUEST_URL.format(animal_name=animal_name), headers={'X-Api-Key': KEY})
+    res = response.json()
+    if response.status_code != requests.codes.ok:
+        print("Error:", response.status_code, response.text)
+    return res
 
 
 def read_animal_html(html_file_path):
@@ -57,7 +70,9 @@ def dump_data_to_html(new_html_content):
 
 def main():
     """ the functions are called here """
-    animals_data = load_data('animals_data.json')
+    #animals_data = load_data('animals_data.json')
+    animal_name = "monkey"
+    animals_data = load_data(animal_name)
     html_content = read_animal_html('animals_template.html')
     output = create_str_for_html(animals_data)
     new_html_content = replace_string_html(html_content, output)
@@ -66,3 +81,39 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+"""
+import requests
+
+
+REQUEST_URL = 'https://api.api-ninjas.com/v1/animals?name={animal_name}'
+KEY = 'Cg1Tw9jXYOCcDG2gBeHm5w==3EUfQgz75QoslqDO'
+
+
+def retrieve_data(animal_name):
+    response = requests.get(REQUEST_URL.format(animal_name=animal_name), headers={'X-Api-Key': KEY})
+    res = response.json()
+    if response.status_code == requests.codes.ok:
+        print(res)
+    else:
+        print("Error:", response.status_code, response.text)
+    return res
+
+
+def show_data(animal_data):
+    for animal_information in animal_data:
+        print(f"{animal_information["name"]}, scientific name: {animal_information["taxonomy"]["scientific_name"]}")
+
+
+def main():
+    animal_name = "fox"
+    animals_data = retrieve_data(animal_name)
+    show_data(animals_data)
+
+if __name__ == "__main__":
+    main()
+
+
+"""
