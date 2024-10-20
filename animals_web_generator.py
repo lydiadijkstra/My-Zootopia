@@ -6,13 +6,12 @@ REQUEST_URL = 'https://api.api-ninjas.com/v1/animals?name={animal_name}'
 KEY = 'Cg1Tw9jXYOCcDG2gBeHm5w==3EUfQgz75QoslqDO'
 
 
-# def load_data(file_path):
-#     """ Loads a JSON file """
-#     with open(file_path, "r", encoding="utf-8") as handle:
-#         return json.load(handle)
-
-
 def load_data(animal_name):
+    """
+    Retrieve the data with help of the api
+    :param animal_name: search-prompt
+    :return: data from website
+    """
     response = requests.get(REQUEST_URL.format(animal_name=animal_name), headers={'X-Api-Key': KEY})
     res = response.json()
     if response.status_code != requests.codes.ok:
@@ -21,18 +20,37 @@ def load_data(animal_name):
 
 
 def read_animal_html(html_file_path):
-    """ Loads a html-file """
+    """
+    Loads the html-file
+    :param html_file_path: animals_template.html
+    :return: data from html_file
+    """
     with open(html_file_path, "r", encoding="utf-8") as fileobject:
         return fileobject.read()
 
 
 def prompt_user_for_animal_choice():
-    animal_prompt = input("Enter an animal name or type: ")
-    return animal_prompt
+    """
+    Prompt user for a type or name of an animal
+    :return: user choice for animal name or type
+    """
+    while True:
+        animal_prompt = input("Enter an animal name or type: ")
+        # If no name or type is entered, try again
+        if animal_prompt == "":
+            print("No input detected. Please enter an animal name or type!")
+            continue
+        print("Website was successfully generated to the file animals.html.")
+        return animal_prompt
 
 
 def create_str_for_html(data):
-    """ creates the new text for the html-file """
+    """
+    Creates the new text for the html-file with the animal data
+    Redirects to the serialization function
+    :param data: animal data from the website
+    :return: string for the new html-file
+    """
     output = ''
     for animal_data in data:
         output += serialize_animal(animal_data)
@@ -40,7 +58,11 @@ def create_str_for_html(data):
 
 
 def serialize_animal(animal_data):
-    """ serialize the animal data for usage in html """
+    """
+    Serialize the animal data for usage in html
+    :param animal_data: retrieved data from api
+    :return: diet, type and location of the chosen animal
+    """
     output = ''
     diet = animal_data['characteristics'].get('diet')
     fox_type = animal_data['characteristics'].get('type')
@@ -62,20 +84,32 @@ def serialize_animal(animal_data):
 
 
 def replace_string_html(html_content, output):
-    """ replaces the placeholder text and returns the new string """
-    new_html_content = html_content.replace("__REPLACE_ANIMALS_INFO__", output)
+    """
+    Replaces the placeholder text and returns the new string
+    :param html_content: the html-content which will be updated with string
+    :param output: string which will be shown on generated website
+    :return: new content for generating animal website
+    """
+    if len(output) >= 1:
+        new_html_content = html_content.replace("__REPLACE_ANIMALS_INFO__", output)
+    else:
+        new_html_content = html_content.replace("__REPLACE_ANIMALS_INFO__", "No animal of this type was found")
     return new_html_content
 
 
 def dump_data_to_html(new_html_content):
-    """ dumps the new string in a new created html-file """
+    """
+    Dumps the new string in a new created html-file, after this the generated website shows chosen animal data
+    :param new_html_content: new content which will be shown
+    """
     with open("animals.html", "w", encoding="utf-8") as fileobj:
         fileobj.write(new_html_content)
 
 
 def main():
-    """ the functions are called here """
-    #animals_data = load_data('animals_data.json')
+    """
+    Main function to run the programm, calls the functions to run the website with animal data
+    """
     animal_name = prompt_user_for_animal_choice()
     animals_data = load_data(animal_name)
     html_content = read_animal_html('animals_template.html')
@@ -86,39 +120,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-"""
-import requests
-
-
-REQUEST_URL = 'https://api.api-ninjas.com/v1/animals?name={animal_name}'
-KEY = 'Cg1Tw9jXYOCcDG2gBeHm5w==3EUfQgz75QoslqDO'
-
-
-def retrieve_data(animal_name):
-    response = requests.get(REQUEST_URL.format(animal_name=animal_name), headers={'X-Api-Key': KEY})
-    res = response.json()
-    if response.status_code == requests.codes.ok:
-        print(res)
-    else:
-        print("Error:", response.status_code, response.text)
-    return res
-
-
-def show_data(animal_data):
-    for animal_information in animal_data:
-        print(f"{animal_information["name"]}, scientific name: {animal_information["taxonomy"]["scientific_name"]}")
-
-
-def main():
-    animal_name = "fox"
-    animals_data = retrieve_data(animal_name)
-    show_data(animals_data)
-
-if __name__ == "__main__":
-    main()
-
-
-"""
