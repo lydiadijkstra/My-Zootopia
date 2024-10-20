@@ -26,6 +26,11 @@ def read_animal_html(html_file_path):
         return fileobject.read()
 
 
+def prompt_user_for_animal_choice():
+    animal_prompt = input("Enter an animal name or type: ")
+    return animal_prompt
+
+
 def create_str_for_html(data):
     """ creates the new text for the html-file """
     output = ''
@@ -71,7 +76,7 @@ def dump_data_to_html(new_html_content):
 def main():
     """ the functions are called here """
     #animals_data = load_data('animals_data.json')
-    animal_name = "monkey"
+    animal_name = prompt_user_for_animal_choice()
     animals_data = load_data(animal_name)
     html_content = read_animal_html('animals_template.html')
     output = create_str_for_html(animals_data)
