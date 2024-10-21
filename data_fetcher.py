@@ -1,8 +1,14 @@
 import requests
+import os
+from dotenv import load_dotenv
 
+# call the function from dotenv where the key is hidden
+load_dotenv()
 
 REQUEST_URL = 'https://api.api-ninjas.com/v1/animals?name={animal_name}'
-KEY = 'Cg1Tw9jXYOCcDG2gBeHm5w==3EUfQgz75QoslqDO'
+API_KEY = os.getenv('API_KEY') # call the os-function to read the key
+
+print(API_KEY)
 
 def fetch_data(animal_name):
     """
@@ -22,7 +28,7 @@ def fetch_data(animal_name):
     }
   },
     """
-    response = requests.get(REQUEST_URL.format(animal_name=animal_name), headers={'X-Api-Key': KEY})
+    response = requests.get(REQUEST_URL.format(animal_name=animal_name), headers={'X-Api-Key': API_KEY})
     res = response.json()
     if response.status_code != requests.codes.ok:
         print("Error:", response.status_code, response.text)
