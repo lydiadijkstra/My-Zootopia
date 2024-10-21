@@ -8,7 +8,6 @@ load_dotenv()
 REQUEST_URL = 'https://api.api-ninjas.com/v1/animals?name={animal_name}'
 API_KEY = os.getenv('API_KEY') # call the os-function to read the key
 
-print(API_KEY)
 
 def fetch_data(animal_name):
     """
