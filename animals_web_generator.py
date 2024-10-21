@@ -1,22 +1,4 @@
-import json
-import requests
-
-
-REQUEST_URL = 'https://api.api-ninjas.com/v1/animals?name={animal_name}'
-KEY = 'Cg1Tw9jXYOCcDG2gBeHm5w==3EUfQgz75QoslqDO'
-
-
-def load_data(animal_name):
-    """
-    Retrieve the data with help of the api
-    :param animal_name: search-prompt
-    :return: data from website
-    """
-    response = requests.get(REQUEST_URL.format(animal_name=animal_name), headers={'X-Api-Key': KEY})
-    res = response.json()
-    if response.status_code != requests.codes.ok:
-        print("Error:", response.status_code, response.text)
-    return res
+from data_fetcher import fetch_data
 
 
 def read_animal_html(html_file_path):
@@ -111,7 +93,7 @@ def main():
     Main function to run the programm, calls the functions to run the website with animal data
     """
     animal_name = prompt_user_for_animal_choice()
-    animals_data = load_data(animal_name)
+    animals_data = fetch_data(animal_name)
     html_content = read_animal_html('animals_template.html')
     output = create_str_for_html(animals_data)
     new_html_content = replace_string_html(html_content, output)
